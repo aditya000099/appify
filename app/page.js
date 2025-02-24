@@ -65,7 +65,7 @@ export default async function Home() {
                     Browse Apps
                   </Link>
                   <Link
-                    href="/auth"
+                    href="/admin"
                     className="px-8 py-3 rounded-full bg-purple-600/20 hover:bg-purple-600/30 text-white font-semibold transition-all border border-purple-600/50"
                   >
                     Publish Your App

@@ -1,166 +1,155 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
-import AddCountry from "../components/admin/AddCountry";
-import AddCity from "../components/admin/AddCity";
-import AddPackage from "../components/admin/AddPackage";
-import PackageList from "../components/admin/PackageList";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import AdminSidebar from "../components/admin/AdminSidebar";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FiDownload, FiStar, FiPackage, FiPlus } from "react-icons/fi";
 import Navbar from "../components/navbar";
-import ContactFormList from "../components/admin/ContactFormList";
 
-export default function AdminPanel() {
+export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentTab = searchParams.get("tab") || "";
-  const [isAdmin, setIsAdmin] = useState(null);
-  const [countries, setCountries] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [apps, setApps] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const contentRef = useRef(null);
-  const [isContentScrolling, setIsContentScrolling] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (contentRef.current) {
-        const isContentScrollable =
-          contentRef.current.scrollHeight > contentRef.current.clientHeight;
-        setIsContentScrolling(isContentScrollable);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (status === "authenticated") {
-        const res = await fetch(`/api/admin/check`, {
-          method: "GET",
-          cache: "no-store",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setIsAdmin(data.isAdmin);
-        } else {
-          console.error("Error checking the admin status");
-        }
-      }
-    };
-    checkAdminStatus();
-  }, [status]);
-
-  useEffect(() => {
-    const fetchCountriesAndCities = async () => {
-      try {
-        const [countriesRes, citiesRes] = await Promise.all([
-          fetch(`/api/countries`, { cache: "no-store" }),
-          fetch(`/api/cities`, { cache: "no-store" }),
-        ]);
-
-        if (countriesRes.ok && citiesRes.ok) {
-          const [countriesData, citiesData] = await Promise.all([
-            countriesRes.json(),
-            citiesRes.json(),
-          ]);
-          setCountries(countriesData);
-          setCities(citiesData);
-        } else {
-          console.error("Failed to fetch countries and cities");
-        }
-      } catch (e) {
-        console.error("There was an error while fetching the data", e);
-      }
-    };
-    fetchCountriesAndCities();
-  }, []);
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth");
-    } else if (status === "authenticated") {
-      if (isAdmin === false) {
-        router.push("/");
-      }
     }
-  }, [status, router, isAdmin]);
 
-  if (status === "loading" || isAdmin === null) {
+    if (status === "authenticated") {
+      fetchApps();
+    }
+  }, [status]);
+
+  const fetchApps = async () => {
+    try {
+      const response = await fetch("/api/apps");
+      const data = await response.json();
+      setApps(data.apps);
+      setAnalytics(data.analytics);
+    } catch (error) {
+      console.error("Error fetching apps:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen font-[family-name:var(--font-geist-sans)] flex">
-        <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
-        <AdminSidebar paddingTop="mt-20" />
-        <div
-          ref={contentRef}
-          className={`container mx-auto p-6 sm:p-20 flex-1  ${
-            isContentScrolling ? "overflow-y-scroll" : ""
-          }`}
-        >
-          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">
-            Loading...
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
       </div>
     );
   }
 
-  if (status === "unauthenticated" || isAdmin === false) {
-    return null;
-  }
-
-  const renderContent = () => {
-    switch (currentTab) {
-      case "add-country":
-        return (
-          <AddCountry
-            onCountryAdded={(newCountry) =>
-              setCountries([...countries, newCountry])
-            }
-          />
-        );
-      case "add-city":
-        return <AddCity countries={countries} />;
-      case "add-package":
-        return <AddPackage countries={countries} cities={cities} />;
-      case "package-list":
-        return <PackageList />;
-      case "contact-list":
-        return <ContactFormList />;
-      default:
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-semibold text-gray-800">
-              Welcome to Admin Panel
-            </h2>
-            <p className="text-gray-700">
-              Select an option from the sidebar to start using the admin panel.
-            </p>
-          </div>
-        );
-    }
-  };
-
   return (
-    <div className="min-h-screen font-[family-name:var(--font-geist-sans)] flex">
-      <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
-      <AdminSidebar paddingTop="mt-20" />
-      <div
-        ref={contentRef}
-        className={`container mx-auto p-6 sm:p-20 flex-1  ${
-          isContentScrolling ? "overflow-y-scroll" : ""
-        }`}
-      >
-        {renderContent()}
+    <div className="min-h-screen bg-gradient-to-br from-black to-purple-900/30 p-8">
+      <Navbar />
+      {/* Analytics Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-20 p-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/5 p-6 rounded-xl backdrop-blur-xl border border-white/10"
+        >
+          <div className="flex items-center gap-4">
+            <FiPackage className="text-purple-400 text-2xl" />
+            <div>
+              <p className="text-gray-400">Total Apps</p>
+              <h3 className="text-2xl font-bold text-white">
+                {analytics?.totalApps || 0}
+              </h3>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white/5 p-6 rounded-xl backdrop-blur-xl border border-white/10"
+        >
+          <div className="flex items-center gap-4">
+            <FiDownload className="text-green-400 text-2xl" />
+            <div>
+              <p className="text-gray-400">Total Downloads</p>
+              <h3 className="text-2xl font-bold text-white">
+                {analytics?.totalDownloads || 0}
+              </h3>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/5 p-6 rounded-xl backdrop-blur-xl border border-white/10"
+        >
+          <div className="flex items-center gap-4">
+            <FiStar className="text-yellow-400 text-2xl" />
+            <div>
+              <p className="text-gray-400">Average Rating</p>
+              <h3 className="text-2xl font-bold text-white">
+                {analytics?.averageRating.toFixed(1) || "0.0"}
+              </h3>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex justify-between items-center mb-6 px-12">
+        <h2 className="text-2xl font-bold text-white">Your Apps</h2>
+        <Link
+          href="/admin/apps/new"
+          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+        >
+          <FiPlus /> New App
+        </Link>
+      </div>
+
+      {/* Apps List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-12">
+        {apps.map((app) => (
+          <motion.div
+            key={app.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white/5 rounded-xl backdrop-blur-xl border border-white/10 overflow-hidden"
+          >
+            <div className="flex items-center p-4">
+              <img
+                src={app.iconUrl}
+                alt={app.name}
+                className="w-16 h-16 rounded-xl mr-4"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-white">{app.name}</h3>
+                <p className="text-gray-400 text-sm">Version {app.version}</p>
+                <p className="text-gray-400 text-sm">
+                  Status:{" "}
+                  <span
+                    className={`${
+                      app.approvalStatus === "APPROVED"
+                        ? "text-green-400"
+                        : app.approvalStatus === "REJECTED"
+                        ? "text-red-400"
+                        : "text-yellow-400"
+                    }`}
+                  >
+                    {app.approvalStatus}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
 }
-
-// no cache of fetched data
