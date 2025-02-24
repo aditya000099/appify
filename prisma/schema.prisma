@@ -15,26 +15,31 @@ model User {
   role          Role       @default(USER)
   developerApps App[]      @relation("DeveloperApps") //Renamed to be more explicit
   downloads     Download[]
+  reviews       Review[] // User's reviews
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   isVerified    Boolean    @default(false) //email verification
+
+  @@index([email]) // Index for faster lookup of user by email
 }
 
 model App {
-  id          String     @id @default(cuid())
-  name        String
-  description String
-  developer   User       @relation("DeveloperApps", fields: [developerId], references: [id])
-  developerId String
-  category    Category
-  version     String
-  apkFileUrl  String //Store apk url
-  downloads   Download[]
-  price       Float      @default(0)
-  iconUrl     String //App Icon Url
-  screenshots String[] //Array of screenshot urls
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id             String         @id @default(cuid())
+  name           String
+  description    String
+  developer      User           @relation("DeveloperApps", fields: [developerId], references: [id])
+  developerId    String
+  category       Category
+  version        String
+  apkFileUrl     String //Store apk url
+  downloads      Download[]
+  price          Float          @default(0)
+  iconUrl        String //App Icon Url
+  screenshots    String[] //Array of screenshot urls
+  reviews        Review[] //App's reviews
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  approvalStatus ApprovalStatus @default(PENDING) //Approval status for new apps
 
   @@index([developerId]) // Index for faster queries
 }
@@ -51,6 +56,21 @@ model Download {
   @@index([appId]) // Index for faster queries
 }
 
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      @default(5) @db.SmallInt //rating between 1-5
+  comment   String? //optional comments
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  app       App      @relation(fields: [appId], references: [id])
+  appId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId]) // Indexes for faster queries
+  @@index([appId])
+}
+
 enum Role {
   ADMIN
   DEVELOPER
@@ -64,4 +84,10 @@ enum Category {
   ENTERTAINMENT
   EDUCATION
   OTHER
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
