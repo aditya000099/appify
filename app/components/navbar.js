@@ -20,7 +20,7 @@ export default function Navbar() {
       {/* Desktop Navigation */}
       <div className="hidden sm:flex space-x-6 text-lg font-medium sm:mr-10">
         <button
-          onClick={() => setIsOpen(true)}
+          // onClick={() => setIsOpen(true)}
           className="bg-indigo-500 text-white px-2 py-1 rounded-xl text-sm hover:bg-indigo-600 transition"
         >
           List

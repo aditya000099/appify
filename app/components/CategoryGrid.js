@@ -24,7 +24,7 @@ export default function CategoryGrid() {
         <Link
           key={category.id}
           href={`/apps/category/${category.id}`}
-          className="flex flex-col items-center p-6 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
+          className="flex flex-col items-center p-6 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
         >
           <category.icon className="text-4xl text-blue-400 mb-3" />
           <span className="text-white font-medium">{category.name}</span>
