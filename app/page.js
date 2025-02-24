@@ -6,6 +6,7 @@ import FeaturedApps from "./components/FeaturedApps";
 import CategoryGrid from "./components/CategoryGrid";
 import SearchBar from "./components/SearchBar";
 import { AuroraText } from "./components/ui/AuroraText";
+import BrowserCheck from "./components/BrowserCheck";
 import prisma from "@/prisma/client";
 
 async function getFeaturedApps() {
@@ -30,6 +31,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
+      <BrowserCheck />
 
       {/* Main content wrapper */}
       <main className="flex-1 relative mt-10">

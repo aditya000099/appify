@@ -13,7 +13,8 @@ export default function FeaturedApps({ apps }) {
                 <Image
                   src={app.iconUrl}
                   alt={app.name}
-                  fill
+                  width={12000}
+                  height={12000}
                   className="object-cover transform group-hover:scale-105 transition-all duration-500 ease-in-out"
                 />
                 {/* Featured Tag - Now inside image */}

@@ -2,12 +2,28 @@ import Image from "next/image";
 import prisma from "@/prisma/client";
 import Navbar from "@/app/components/navbar";
 import { AuroraText } from "@/app/components/ui/AuroraText";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import ReviewForm from "@/app/components/ReviewForm";
 
 async function getAppDetails(id) {
   const app = await prisma.app.findUnique({
     where: { id: id },
     include: {
       developer: true,
+      reviews: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
       _count: {
         select: { downloads: true },
       },
@@ -17,6 +33,7 @@ async function getAppDetails(id) {
 }
 
 export default async function AppDetailsPage({ params }) {
+  const session = await getServerSession(authOptions);
   const app = await getAppDetails(params.id);
 
   if (!app) {
@@ -24,14 +41,17 @@ export default async function AppDetailsPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <Navbar />
 
       <main className="flex-1 relative mt-10">
-        {/* Background pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_90%,transparent_100%)]" />
+        {/* Background pattern with radial gradients */}
+        <div className="fixed inset-0 z-0">
+          <div className="absolute left-[-10%] top-[10%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
+          <div className="absolute right-[-10%] top-[10%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
+        </div>
 
-        <div className="relative container mx-auto p-8 mt-16">
+        <div className="relative z-10 container mx-auto p-8 mt-16">
           <div className="flex flex-col gap-8">
             <div className="flex items-start gap-6">
               <Image
@@ -42,9 +62,9 @@ export default async function AppDetailsPage({ params }) {
                 className="rounded-2xl"
               />
               <div>
-                <AuroraText as="h1" className="text-3xl font-bold mb-2">
+                <h1 as="h1" className="text-3xl font-bold mb-2">
                   {app.name}
-                </AuroraText>
+                </h1>
                 <p className="text-zinc-400">{app.developer.name}</p>
                 <div className="mt-4 flex gap-4">
                   <button className="px-8 py-3 rounded-full bg-blue-600/20 hover:bg-blue-600/30 text-white font-semibold transition-all border border-blue-600/50">
@@ -98,6 +118,55 @@ export default async function AppDetailsPage({ params }) {
                 </div>
               </div>
             )}
+
+            {/* Reviews Section */}
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4 text-white">Reviews</h2>
+
+              {session ? (
+                <div className="mb-8">
+                  <h3 className="text-lg font-medium text-white mb-4">
+                    Add a Review
+                  </h3>
+                  <ReviewForm appId={app.id} />
+                </div>
+              ) : (
+                <p className="text-zinc-400 mb-8">
+                  Please log in to leave a review.
+                </p>
+              )}
+
+              <div className="space-y-6">
+                {app.reviews.length === 0 ? (
+                  <p className="text-zinc-400">No reviews yet.</p>
+                ) : (
+                  app.reviews.map((review) => (
+                    <div
+                      key={review.id}
+                      className="bg-zinc-800/50 p-4 rounded-lg"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="text-white font-medium">
+                            {review.user.name || review.user.email}
+                          </p>
+                          <div className="text-yellow-500">
+                            {"★".repeat(review.rating)}
+                            {"☆".repeat(5 - review.rating)}
+                          </div>
+                        </div>
+                        <span className="text-zinc-500 text-sm">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      {review.comment && (
+                        <p className="text-zinc-400">{review.comment}</p>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </main>

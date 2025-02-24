@@ -45,9 +45,7 @@ export default function AdminPanel() {
       if (status === "authenticated") {
         const res = await fetch(`/api/admin/check`, {
           method: "GET",
-          next: {
-      revalidate: 360, // 6 mins
-    },
+          cache: "no-store",
         });
         if (res.ok) {
           const data = await res.json();
@@ -64,8 +62,8 @@ export default function AdminPanel() {
     const fetchCountriesAndCities = async () => {
       try {
         const [countriesRes, citiesRes] = await Promise.all([
-          fetch(`/api/countries`),
-          fetch(`/api/cities`),
+          fetch(`/api/countries`, { cache: "no-store" }),
+          fetch(`/api/cities`, { cache: "no-store" }),
         ]);
 
         if (countriesRes.ok && citiesRes.ok) {

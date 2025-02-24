@@ -17,10 +17,8 @@ export default function CountryPage() {
   useEffect(() => {
     const fetchCountryData = async () => {
       try {
-        const response = await fetch(`/api/countries`,{
-          next: {
-          revalidate: 360, // 6 mins
-        },
+        const response = await fetch(`/api/countries`, {
+          cache: "no-store",
         });
 
         if (response.ok) {

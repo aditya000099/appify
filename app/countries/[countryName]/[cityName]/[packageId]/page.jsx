@@ -31,10 +31,8 @@ export default function PackagePage() {
   useEffect(() => {
     const fetchPackageData = async () => {
       try {
-        const response = await fetch(`/api/packages?cityId=${cityName}`,{
-          next: {
-          revalidate: 360, // 6 mins
-        },
+        const response = await fetch(`/api/packages?cityId=${cityName}`, {
+          cache: "no-store",
         });
         if (response.ok) {
           const data = await response.json();
@@ -199,7 +197,9 @@ export default function PackagePage() {
             )}
           </div>
         ) : (
-          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">Loading...</div>
+          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">
+            Loading...
+          </div>
         )}
       </div>
     </div>

@@ -17,9 +17,7 @@ export default function AddCity({ countries }) {
         headers: {
           "Content-Type": "application/json",
         },
-        next: {
-          revalidate: 360, // 6 mins
-        },
+        cache: "no-store",
       });
       const data = await res.json();
       if (res.ok) {

@@ -42,9 +42,7 @@ export default function PackageList() {
     const fetchPackages = async () => {
       try {
         const response = await fetch(`/api/packages`, {
-          next: {
-            revalidate: 360, // 6 mins
-          },
+          cache: "no-store",
         });
         if (response.ok) {
           const data = await response.json();
