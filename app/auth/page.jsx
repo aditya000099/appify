@@ -56,21 +56,21 @@ export default function Auth() {
       }
     } else {
       try {
-        const res = await signIn("credentials", {
+        const result = await signIn("credentials", {
           email,
           password,
           redirect: false,
         });
 
-        if (res?.error) {
-          setError(res.error);
+        if (result?.error) {
+          setError(result.error);
         } else {
           router.refresh();
           router.push("/");
         }
       } catch (error) {
-        console.error("Error during login:", error);
-        setError("Something went wrong during login");
+        console.error("Login error:", error);
+        setError("An error occurred during login");
       }
     }
   };

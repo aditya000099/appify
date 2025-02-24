@@ -1,5 +1,5 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
 export async function POST(request) {
   try {
@@ -26,17 +26,33 @@ export async function POST(request) {
       );
     }
 
-    // Create new user
+    // Create new user with role USER (default from schema)
     const user = await prisma.user.create({
       data: {
         email,
-        password,
+        password, // Note: password should already be hashed from the client
         name,
+        role: "USER",
+        isVerified: false,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
       },
     });
 
     return NextResponse.json(
-      { message: "User created successfully", user: { email: user.email } },
+      {
+        message: "User created successfully",
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        },
+      },
       { status: 201 }
     );
   } catch (error) {
