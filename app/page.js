@@ -41,13 +41,16 @@ export default async function Home() {
           <section className="pt-20 pb-32">
             <div className="container mx-auto px-4">
               <div className="text-center max-w-4xl mx-auto">
+                <span className="text-5xl md:text-7xl font-bold mb-6 bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)] bg-clip-text tracking-tighter text-transparent">
+                  Discover Amazing{" "}
+                </span>
                 <AuroraText
                   as="h1"
                   className="text-5xl md:text-7xl font-bold mb-6"
                 >
-                  Discover Amazing Apps
+                  Apps
                 </AuroraText>
-                <p className="text-xl text-zinc-300 mb-8 ">
+                <p className="text-xl text-zinc-300 mb-8  bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)] bg-clip-text tracking-tighter text-transparent">
                   Your trusted platform for finding and distributing exceptional
                   applications
                 </p>
