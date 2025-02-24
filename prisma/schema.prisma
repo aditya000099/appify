@@ -39,7 +39,7 @@ model App {
   reviews        Review[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  approvalStatus ApprovalStatus @default(PENDING)
+  approvalStatus ApprovalStatus @default(APPROVED)
 
   @@index([developerId])
 }
