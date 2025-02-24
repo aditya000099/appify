@@ -16,6 +16,8 @@ export default function Auth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     if (isSignup) {
       try {
         const hashedPassword = await hash(password, 12);
@@ -29,43 +31,46 @@ export default function Auth() {
           headers: {
             "Content-Type": "application/json",
           },
-          next: {
-            revalidate: 360, // 6 mins
-          },
         });
         const data = await res.json();
         if (res.ok) {
-          // console.log("Successfully created account", {data})
-          const res2 = await signIn("credentials", {
+          // After successful signup, login with unhashed password
+          const loginRes = await signIn("credentials", {
             email,
             password,
             redirect: false,
           });
-          //  console.log("Result after login attempt ", {res2})
-          if (res2?.error) {
-            setError(res2.error);
+
+          if (loginRes?.error) {
+            setError(loginRes.error);
           } else {
-            // console.log("Successfully logged in",{res2})
+            router.refresh();
             router.push("/");
           }
         } else {
           setError(data.message);
         }
       } catch (error) {
-        console.log("Error during sign up ", { error });
-        setError("Something went wrong");
+        console.error("Error during sign up:", error);
+        setError("Something went wrong during signup");
       }
     } else {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-      // console.log("Result after login attempt ", {res})
-      if (res?.error) {
-        setError(res.error);
-      } else {
-        router.push("/");
+      try {
+        const res = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (res?.error) {
+          setError(res.error);
+        } else {
+          router.refresh();
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+        setError("Something went wrong during login");
       }
     }
   };
