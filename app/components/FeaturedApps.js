@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function FeaturedApps({ apps }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
       {apps.map((app) => (
         <Link key={app.id} href={`/apps/${app.id}`} className="group block">
           <div className="flex flex-col items-center">

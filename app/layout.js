@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Holidays",
-  description: "Bokk your holiday packages and enjoy your holidays",
+  title: "Appify",
+  description:
+    " Your trusted platform for finding and distributing exceptional applications",
 };
 
 export default function RootLayout({ children }) {
