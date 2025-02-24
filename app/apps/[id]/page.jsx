@@ -44,7 +44,7 @@ export default async function AppDetailsPage({ params }) {
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <Navbar />
 
-      <main className="flex-1 relative mt-10">
+      <main className="flex-1 relative mt-20">
         {/* Background pattern with radial gradients */}
         <div className="fixed inset-0 z-0">
           <div className="absolute left-[-10%] top-[10%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
