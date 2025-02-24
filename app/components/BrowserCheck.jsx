@@ -8,9 +8,8 @@ const BrowserCheck = () => {
     const checkBrowser = () => {
       const userAgent = navigator.userAgent.toLowerCase();
 
-      // Check Opera first since it includes Chrome in its UA
       const isOpera = /opera|opr/i.test(userAgent);
-      // Only consider it Chrome if it's not Opera and not Edge
+
       const isChrome =
         !isOpera &&
         /chrome|chromium/i.test(userAgent) &&
@@ -20,7 +19,6 @@ const BrowserCheck = () => {
 
       console.log("Browser checks:", { isChrome, isFirefox, isEdge, isOpera });
 
-      // Show popup for Opera or any other non-recommended browser
       if (isOpera || (!isChrome && !isFirefox && !isEdge)) {
         console.log("Setting popup to show");
         setShowPopup(true);

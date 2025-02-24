@@ -33,14 +33,11 @@ export default async function Home() {
       <Navbar />
       <BrowserCheck />
 
-      {/* Main content wrapper */}
       <main className="flex-1 relative mt-10">
-        {/* Background pattern with darker overlay */}
+        {/* Background pattern lines wala */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_90%,transparent_100%)]" />
 
-        {/* Content sections */}
         <div className="relative">
-          {/* Hero Section */}
           <section className="pt-20 pb-32">
             <div className="container mx-auto px-4">
               <div className="text-center max-w-4xl mx-auto">
@@ -75,7 +72,6 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Featured Apps Section */}
           <section className="py-16 bg-black/20 ">
             <div className="container mx-auto px-4">
               <AuroraText
@@ -88,7 +84,6 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Categories Section */}
           <section className="py-16">
             <div className="container mx-auto px-4">
               <AuroraText as="h2" className="text-3xl font-bold mb-8">

@@ -156,17 +156,15 @@ body {
 }
 
 @layer utilities {
-  /* Reset container padding for all browsers */
   .container {
     padding-left: max(1.5rem, calc((100% - 1280px) / 2));
     padding-right: max(1.5rem, calc((100% - 1280px) / 2));
     width: 100%;
-    margin: 0; /* Changed from 0 auto to prevent Opera's extra padding */
+    margin: 0;
     box-sizing: border-box;
-    max-width: 100%; /* Ensure no horizontal scrolling */
+    max-width: 100%;
   }
 
-  /* Ensure consistent box model across browsers */
   html {
     box-sizing: border-box;
   }
@@ -177,10 +175,9 @@ body {
     box-sizing: inherit;
   }
 
-  /* Reset body margins and padding */
   body {
     margin: 0;
     padding: 0;
-    min-width: 320px; /* Prevent layout breaking on very small screens */
+    min-width: 320px;
   }
 }

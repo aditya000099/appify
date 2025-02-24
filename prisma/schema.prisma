@@ -13,14 +13,14 @@ model User {
   name          String?
   password      String
   role          Role       @default(USER)
-  developerApps App[]      @relation("DeveloperApps") //Renamed to be more explicit
+  developerApps App[]      @relation("DeveloperApps")
   downloads     Download[]
   reviews       Review[] // User's reviews
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-  isVerified    Boolean    @default(false) //email verification
+  isVerified    Boolean    @default(false)
 
-  @@index([email]) // Index for faster lookup of user by email
+  @@index([email])
 }
 
 model App {
@@ -31,17 +31,17 @@ model App {
   developerId    String
   category       Category
   version        String
-  apkFileUrl     String //Store apk url
+  apkFileUrl     String
   downloads      Download[]
   price          Float          @default(0)
-  iconUrl        String //App Icon Url
-  screenshots    String[] //Array of screenshot urls
-  reviews        Review[] //App's reviews
+  iconUrl        String
+  screenshots    String[]
+  reviews        Review[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  approvalStatus ApprovalStatus @default(PENDING) //Approval status for new apps
+  approvalStatus ApprovalStatus @default(PENDING)
 
-  @@index([developerId]) // Index for faster queries
+  @@index([developerId])
 }
 
 model Download {
@@ -52,14 +52,14 @@ model Download {
   appId     String
   createdAt DateTime @default(now())
 
-  @@index([userId]) // Index for faster queries
-  @@index([appId]) // Index for faster queries
+  @@index([userId])
+  @@index([appId])
 }
 
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      @default(5) @db.SmallInt //rating between 1-5
-  comment   String? //optional comments
+  rating    Int      @default(5) @db.SmallInt
+  comment   String?
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   app       App      @relation(fields: [appId], references: [id])
@@ -67,7 +67,7 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId]) // Indexes for faster queries
+  @@index([userId])
   @@index([appId])
 }
 
