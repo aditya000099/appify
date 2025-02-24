@@ -8,7 +8,7 @@ export default function FeaturedApps({ apps }) {
         <Link
           key={app.id}
           href={`/apps/${app.id}`}
-          className="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+          className="bg-zinc-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
         >
           <div className="relative h-48">
             <Image
@@ -22,9 +22,9 @@ export default function FeaturedApps({ apps }) {
             <h3 className="text-xl font-semibold text-white mb-2">
               {app.name}
             </h3>
-            <p className="text-gray-400 text-sm mb-2">{app.description}</p>
+            <p className="text-zinc-400 text-sm mb-2">{app.description}</p>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-zinc-400">
                 {app._count.downloads} downloads
               </span>
               <span className="text-sm text-blue-400">

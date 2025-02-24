@@ -47,7 +47,7 @@ export default async function Home() {
                 >
                   Discover Amazing Apps
                 </AuroraText>
-                <p className="text-xl text-gray-300 mb-8 ">
+                <p className="text-xl text-zinc-300 mb-8 ">
                   Your trusted platform for finding and distributing exceptional
                   applications
                 </p>
@@ -95,7 +95,7 @@ export default async function Home() {
             </div>
           </section>
 
-          <footer className="border-t border-gray-800/50 py-8 text-gray-400 text-center">
+          <footer className="border-t border-zinc-800/50 py-8 text-zinc-400 text-center">
             <div className="container mx-auto px-4">
               <p>© {new Date().getFullYear()} Appifyy. All rights reserved.</p>
             </div>
