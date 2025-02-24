@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["cloud.appwrite.io", "image1.com", "image2.com"],
+    domains: [
+      "cloud.appwrite.io",
+      "image1.com",
+      "image2.com",
+      "play-lh.googleusercontent.com",
+    ],
   },
   // async redirects() {
   //     return [
