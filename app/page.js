@@ -6,6 +6,7 @@ import FeaturedApps from "./components/FeaturedApps";
 import CategoryGrid from "./components/CategoryGrid";
 import SearchBar from "./components/SearchBar";
 import { AuroraText } from "./components/ui/AuroraText";
+import prisma from "@/prisma/client";
 
 async function getFeaturedApps() {
   const apps = await prisma.app.findMany({
