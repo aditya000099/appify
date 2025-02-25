@@ -11,7 +11,7 @@ import prisma from "@/prisma/client";
 
 async function getFeaturedApps() {
   const apps = await prisma.app.findMany({
-    take: 6,
+    take: 8,
     include: {
       developer: true,
       _count: {
